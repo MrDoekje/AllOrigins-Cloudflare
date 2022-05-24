@@ -16,8 +16,6 @@ async function processRequest(req, res) {
 function parseParams(req) {
     const url = new URL(req.url);
 
-    console.log(url)
-
   const params = {
     requestMethod: req.method,
     format: url.pathname.slice(1),
@@ -49,7 +47,6 @@ async function createResponse(page, params, startTime) {
 
     res.headers.set('Cache-control', `public, max-age=${maxAge}, stale-if-error=600`)
   }
-    console.log(page)
   if (params.format === 'raw' && !(page.status || {}).error) {
     res.headers.set(
       'Content-Length', page.contentLength
@@ -81,14 +78,11 @@ addEventListener('fetch', event => {
 })
 
 function getPage({ url, format, requestMethod, charset }) {
-    console.log(format)
   if (format === 'info' || requestMethod === 'HEAD') {
     return getPageInfo(url)
   } else if (format === 'raw') {
     return getRawPage(url, requestMethod, charset)
   }
-
-  console.log(url)
 
   return getPageContents(url, requestMethod, charset)
 }
@@ -99,7 +93,7 @@ async function getPageInfo(url) {
 
   return {
     url: url,
-    content_type: response.headers['content-type'],
+    // content_type: response.headers['content-type'],
     content_length: +response.headers['content-length'] || -1,
     http_code: response.statusCode,
   }
@@ -150,7 +144,6 @@ async function request(url, requestMethod, raw = false, charset = null) {
       method: requestMethod,
       decompress: !raw,
     }
-    console.log(url)
     const response = await fetch(url, options)
     if (options.method === 'HEAD') return { response }
 
@@ -180,7 +173,7 @@ async function processError(e) {
     status: {
       url,
       http_code,
-      content_type: headers['content-type'],
+    //   content_type: headers['content-type'],
       content_length: contentLength,
     },
   }
