@@ -51,7 +51,6 @@ async function createResponse(page, params, startTime) {
     res.headers.set(
       'Content-Length', page.contentLength
     )
-    // res.body = page.content
     return new Response(page.content, res)
   }
 
@@ -69,8 +68,7 @@ async function createResponse(page, params, startTime) {
   if (params.callback) {
     return res.jsonp(page)
   }
-  res.body = new TextEncoder().encode(JSON.stringify(page))
-  return res
+  return new Response(new TextEncoder().encode(JSON.stringify(page)), res)
 }
 
 addEventListener('fetch', event => {
